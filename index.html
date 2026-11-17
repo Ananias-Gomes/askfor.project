@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Mapa de Progresso de Inglês</title>
+<script>try{var t=localStorage.getItem('tema')||(matchMedia('(prefers-color-scheme:dark)').matches?'escuro':'claro');document.documentElement.dataset.tema=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+
+<header class="topo azul">
+  <div class="wrap">
+    <a class="marca" href="#main">Mapa de Progresso de Inglês</a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#como">Como funciona</a></li>
+        <li><a href="#alunos">Alunos</a></li>
+        <li><a href="#destaques">Destaques</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+    <button type="button" id="tema" class="btn" aria-pressed="false">Modo escuro</button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero wrap" aria-labelledby="t-hero">
+    <h1 id="t-hero">Veja onde cada aluno trava e quanto avançou de um mês para o outro</h1>
+    <p>Atividades, conteúdos e provas ficam no mesmo lugar. Assim você compara outubro com novembro e planeja a próxima aula com base em dados.</p>
+    <div class="acoes">
+      <a class="btn" href="#alunos">Ver alunos</a>
+      <a class="btn sec" href="#contato">Falar com o professor</a>
+    </div>
+  </section>
+
+  <section id="como" class="sec-pad wrap" aria-labelledby="t-como">
+    <h2 id="t-como">Como funciona</h2>
+    <ul class="grade">
+      <li><article class="info"><h3>Registre os resultados</h3><p>Lance as notas de atividades e provas, sempre ligadas a um conteúdo.</p></article></li>
+      <li><article class="info"><h3>Compare os meses</h3><p>O sistema calcula a média por habilidade e mostra a variação em pontos.</p></article></li>
+      <li><article class="info"><h3>Reforce o que falta</h3><p>Alunos abaixo de 60% em uma habilidade aparecem como prioridade.</p></article></li>
+    </ul>
+  </section>
+
+  <section id="alunos" class="sec-pad wrap" aria-labelledby="t-alunos">
+    <h2 id="t-alunos">Alunos</h2>
+    <p class="muted">Dados fictícios, apenas para demonstração.</p>
+    <form id="form-busca" role="search" aria-label="Buscar alunos">
+      <div class="campo">
+        <label for="busca">Buscar aluno pelo nome</label>
+        <input type="search" id="busca" autocomplete="off">
+      </div>
+      <div id="chips" class="filtros" role="group" aria-label="Filtrar pela maior dificuldade"></div>
+    </form>
+    <p id="status" role="status"></p>
+    <ul id="lista" class="grade"></ul>
+  </section>
+
+  <section id="destaques" class="azul sec-pad" aria-labelledby="t-dest">
+    <div class="wrap" role="region" aria-roledescription="carrossel" aria-label="Destaques do mês" id="carrossel">
+      <h2 id="t-dest">Destaques do mês</h2>
+      <div aria-live="polite">
+        <!-- Para usar imagens: <img src="..." alt="descrição"> dentro do slide -->
+        <div class="slide" role="group" aria-roledescription="destaque"><h3>Listening é a maior dificuldade do nível A2</h3><p>Quatro de seis alunos ficaram abaixo de 60% nas atividades de compreensão oral.</p></div>
+        <div class="slide" role="group" aria-roledescription="destaque" hidden><h3>Writing evoluiu no nível B2</h3><p>A média da prova de novembro subiu 6 pontos em relação a outubro.</p></div>
+        <div class="slide" role="group" aria-roledescription="destaque" hidden><h3>Vocabulário cresce com as atividades curtas</h3><p>Quem fez as três atividades semanais teve a maior variação do mês.</p></div>
+      </div>
+      <div class="ctrl">
+        <button type="button" class="btn" id="ant">Destaque anterior</button>
+        <button type="button" class="btn" id="prox">Próximo destaque</button>
+        <span id="cont"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="sec-pad wrap" aria-labelledby="t-contato">
+    <h2 id="t-contato">Fale com o professor</h2>
+    <form id="contato-form" class="contato" novalidate>
+      <div class="campo"><label for="nome">Nome</label><input id="nome" name="nome" autocomplete="name" required><p class="erro" id="erro-nome" hidden>Erro: informe seu nome com pelo menos 3 letras.</p></div>
+      <div class="campo"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required><p class="erro" id="erro-email" hidden>Erro: informe um e-mail válido, como nome@exemplo.com.</p></div>
+      <div class="campo"><label for="mensagem">Mensagem</label><textarea id="mensagem" name="mensagem" rows="5" required></textarea><p class="erro" id="erro-mensagem" hidden>Erro: escreva uma mensagem com pelo menos 10 caracteres.</p></div>
+      <button type="submit" class="btn">Enviar mensagem</button>
+      <p id="ok" role="status"></p>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grade">
+      <section aria-labelledby="f-sobre"><h2 id="f-sobre">Sobre o projeto</h2><p>Projeto de estudo para acompanhar o progresso mensal de alunos de inglês.</p></section>
+      <nav aria-labelledby="f-nav"><h2 id="f-nav">Navegação</h2><ul><li><a href="#como">Como funciona</a></li><li><a href="#alunos">Alunos</a></li><li><a href="#destaques">Destaques</a></li><li><a href="#contato">Contato</a></li></ul></nav>
+      <section aria-labelledby="f-contato"><h2 id="f-contato">Contato</h2><address>contato@exemplo.com.br<br>Seg. a sex., 8h às 18h</address></section>
+      <section aria-labelledby="f-acess"><h2 id="f-acess">Acessibilidade</h2><p>Feito seguindo as diretrizes WCAG 2.2, com navegação por teclado e suporte a leitores de tela.</p></section>
+    </div>
+    <p class="copy">© 2026 Mapa de Progresso de Inglês. Os dados dos alunos devem ser tratados conforme a LGPD.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Tema claro/escuro ---------- */
+const root=document.documentElement,btnTema=document.getElementById('tema');
+btnTema.setAttribute('aria-pressed',root.dataset.tema==='escuro');
+btnTema.addEventListener('click',()=>{
+  const e=root.dataset.tema!=='escuro';
+  root.dataset.tema=e?'escuro':'claro';
+  btnTema.setAttribute('aria-pressed',e);
+  try{localStorage.setItem('tema',root.dataset.tema)}catch(_){}
+});
+
+/* ---------- Alunos: busca + filtro ---------- */
+// Troque este array por: const alunos = await (await fetch('/api/alunos')).json();
+const alunos=[
+ {n:'Ana Beatriz Lima',nivel:'B1',dif:'Grammar',ant:58,atu:67},
+ {n:'Carlos Eduardo Souza',nivel:'A2',dif:'Listening',ant:61,atu:59},
+ {n:'Marina Costa',nivel:'B2',dif:'Writing',ant:72,atu:78},
+ {n:'Rafael Oliveira',nivel:'A2',dif:'Vocabulary',ant:49,atu:57},
+ {n:'Júlia Fernandes',nivel:'B1',dif:'Speaking',ant:65,atu:64},
+ {n:'Pedro Henrique Alves',nivel:'B2',dif:'Reading',ant:80,atu:84}
+];
+const difs=['Todas','Grammar','Vocabulary','Listening','Speaking','Reading','Writing'];
+let dif='Todas',q='';
+const lista=document.getElementById('lista'),status=document.getElementById('status'),chips=document.getElementById('chips');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+
+chips.innerHTML=difs.map(d=>`<button type="button" class="chip" aria-pressed="${d===dif}">${d}</button>`).join('');
+chips.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  dif=b.textContent;
+  chips.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  render();
+});
+document.getElementById('busca').addEventListener('input',e=>{q=norm(e.target.value.trim());render()});
+document.getElementById('form-busca').addEventListener('submit',e=>e.preventDefault());
+
+function render(){
+  const r=alunos.filter(a=>(dif==='Todas'||a.dif===dif)&&norm(a.n).includes(q));
+  lista.innerHTML=r.map(a=>{
+    const d=a.atu-a.ant, t=d>0?`Subiu ${d} pontos`:d<0?`Caiu ${-d} pontos`:'Sem variação';
+    return `<li><article class="card"><h3>${esc(a.n)}</h3>
+      <p>Nível ${esc(a.nivel)}. Maior dificuldade: ${esc(a.dif)}.</p>
+      <progress max="100" value="${a.atu}" aria-label="Média de novembro de ${esc(a.n)}">${a.atu}%</progress>
+      <p>Outubro ${a.ant}%. Novembro ${a.atu}%. <strong>${t}.</strong></p></article></li>`;
+  }).join('');
+  status.textContent=r.length?`${r.length} aluno(s) encontrado(s).`:'Nenhum aluno encontrado. Limpe a busca ou escolha outra dificuldade.';
+}
+render();
+
+/* ---------- Carrossel (sem rotação automática, por acessibilidade) ---------- */
+const slides=[...document.querySelectorAll('.slide')],cont=document.getElementById('cont');let i=0;
+function mostrar(n){
+  i=(n+slides.length)%slides.length;
+  slides.forEach((s,k)=>s.hidden=k!==i);
+  cont.textContent=`Destaque ${i+1} de ${slides.length}`;
+}
+document.getElementById('ant').addEventListener('click',()=>mostrar(i-1));
+document.getElementById('prox').addEventListener('click',()=>mostrar(i+1));
+document.getElementById('carrossel').addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft')mostrar(i-1); if(e.key==='ArrowRight')mostrar(i+1);
+});
+mostrar(0);
+
+/* ---------- Formulário de contato ---------- */
+const f=document.getElementById('contato-form'),ok=document.getElementById('ok');
+const regras={nome:v=>v.trim().length>=3,email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),mensagem:v=>v.trim().length>=10};
+f.addEventListener('submit',e=>{
+  e.preventDefault(); ok.textContent='';
+  let primeiro=null;
+  for(const id in regras){
+    const el=f.elements[id],er=document.getElementById('erro-'+id),ruim=!regras[id](el.value);
+    el.setAttribute('aria-invalid',ruim); er.hidden=!ruim;
+    ruim?el.setAttribute('aria-describedby','erro-'+id):el.removeAttribute('aria-describedby');
+    if(ruim&&!primeiro)primeiro=el;
+  }
+  if(primeiro) return primeiro.focus();
+  // TODO: enviar ao back-end:
+  // fetch('/api/contatos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(f)))});
+  ok.textContent='Mensagem enviada. Responderei em até 2 dias úteis.';
+  f.reset();
+});
+</script>
+</body>
+</html>
