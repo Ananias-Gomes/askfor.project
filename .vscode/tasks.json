@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "sqlproj: Build Banco_de_dados_askfor.sql",
+			"type": "process",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"c:/Projetos_VisualStudio/askfor.project/Banco_de_dados_askfor.sql/Banco_de_dados_askfor.sql.sqlproj"
+			],
+			"problemMatcher": "$sqlproj-problem-matcher",
+			"isBackground": true,
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "Builds the Banco_de_dados_askfor.sql SQL project"
+		}
+	]
+}

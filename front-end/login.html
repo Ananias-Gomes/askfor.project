@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Login - Mapa de Progresso de Inglês</title>
+<!-- Script para evitar flash branco no modo escuro -->
+<script>try{var t=localStorage.getItem('tema')||(matchMedia('(prefers-color-scheme:dark)').matches?'escuro':'claro');document.documentElement.dataset.tema=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<!-- Reaproveita o seu CSS principal -->
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Ajustes específicos para centralizar o formulário de login na tela */
+  .login-container {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 2rem;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 28rem; /* Limita a largura do cartão de login */
+  }
+  .login-card h1 {
+    font-size: 1.75rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .seletor-papel {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  /* Estilização dos botões de rádio (Aluno / Professor) como "Chips" do seu CSS */
+  .seletor-papel label {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+  }
+  .seletor-papel input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .seletor-papel span {
+    display: block;
+    padding: .6rem;
+    border: 2px solid var(--line);
+    border-radius: .4rem;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .seletor-papel input[type="radio"]:checked + span {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .seletor-papel input[type="radio"]:focus-visible + span {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+
+<header class="topo azul">
+  <div class="wrap">
+    <a class="marca" href="index_2.html">Mapa de Progresso de Inglês</a>
+    <!-- Botão de modo escuro mantido para consistência -->
+    <button type="button" id="tema" class="btn" aria-pressed="false" style="margin-left: auto;">Modo escuro</button>
+  </div>
+</header>
+
+<main id="main" class="login-container wrap">
+  <article class="card login-card">
+    <h1>Acesso à Plataforma</h1>
+    
+    <form id="form-login" novalidate>
+      
+      <!-- Seletor visual de papel (baseado na constraint CK_Usuarios_Papel do SQL) -->
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <legend class="skip">Selecione seu perfil</legend>
+        <div class="seletor-papel">
+          <label>
+            <input type="radio" name="papel" value="Professor" checked>
+            <span>Sou Professor</span>
+          </label>
+          <label>
+            <input type="radio" name="papel" value="Aluno">
+            <span>Sou Aluno</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" required placeholder="seu@email.com">
+        <p class="erro" id="erro-email" hidden>Erro: informe um e-mail válido.</p>
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" autocomplete="current-password" required placeholder="••••••••">
+        <p class="erro" id="erro-senha" hidden>Erro: a senha não pode estar vazia.</p>
+      </div>
+
+      <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1rem;">Entrar</button>
+      
+      <p id="status-login" role="status" style="margin-top: 1rem; text-align: center; font-weight: 700;"></p>
+    </form>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap" style="text-align: center;">
+    <p class="copy">© 2026 Mapa de Progresso de Inglês.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Tema claro/escuro ---------- */
+const root = document.documentElement;
+const btnTema = document.getElementById('tema');
+btnTema.setAttribute('aria-pressed', root.dataset.tema === 'escuro');
+
+btnTema.addEventListener('click', () => {
+  const e = root.dataset.tema !== 'escuro';
+  root.dataset.tema = e ? 'escuro' : 'claro';
+  btnTema.setAttribute('aria-pressed', e);
+  try { localStorage.setItem('tema', root.dataset.tema) } catch (_) {}
+});
+
+/* ---------- Lógica do Formulário de Login ---------- */
+const formLogin = document.getElementById('form-login');
+const statusLogin = document.getElementById('status-login');
+
+formLogin.addEventListener('submit', (e) => {
+  e.preventDefault(); // Evita recarregar a página
+  statusLogin.textContent = '';
+  statusLogin.style.color = 'inherit';
+
+  const emailInput = document.getElementById('email');
+  const senhaInput = document.getElementById('senha');
+  const erroEmail = document.getElementById('erro-email');
+  const erroSenha = document.getElementById('erro-senha');
+
+  // Validação simples baseada no estilo do seu index_2.html
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value);
+  const senhaValida = senhaInput.value.trim().length > 0;
+
+  // Atualiza atributos ARIA e exibe/oculta erros de Email
+  emailInput.setAttribute('aria-invalid', !emailValido);
+  erroEmail.hidden = emailValido;
+
+  // Atualiza atributos ARIA e exibe/oculta erros de Senha
+  senhaInput.setAttribute('aria-invalid', !senhaValida);
+  erroSenha.hidden = senhaValida;
+
+  document.getElementById('form-registro').addEventListener('submit', async (e) => {
+  e.preventDefault(); // Evita que a página recarregue
+  const status = document.getElementById('status-registro');
+  status.textContent = 'Salvando no banco de dados...';
+  status.style.color = 'inherit';
+
+  // Empacota os dados do formulário
+  const dados = {
+    alunoId: document.getElementById('alunoId').value,
+    avaliacaoId: document.getElementById('avaliacaoId').value,
+    nota: document.getElementById('nota').value,
+    observacao: document.getElementById('observacao').value
+  };
+
+  try {
+    // Envia os dados via POST para a API
+    const resposta = await fetch('http://localhost:3000/api/resultados', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+
+    if (resposta.ok) {
+      status.textContent = 'Nota registrada com sucesso!';
+      status.style.color = 'green';
+      e.target.reset(); // Limpa os campos do formulário
+      
+      // Opcional: Chamar a função que recarrega o dashboard para atualizar a tela na hora
+      // carregarDadosDoBanco(); 
+    } else {
+      status.textContent = 'Erro ao salvar os dados.';
+      status.style.color = 'var(--erro)';
+    }
+  } catch (erro) {
+    status.textContent = 'Falha de conexão com a API.';
+    status.style.color = 'var(--erro)';
+  }
+});
+  const papelEscolhido = document.querySelector('input[name="papel":checked]').value;
+
+  statusLogin.style.color = 'var(--blue)';
+  statusLogin.textContent = 'Autentincando...';
+    setTimeout(() => {
+      localStorage.setItem('perfilUsuario', papelEscolhido);
+      window.location.href = 'index_2.html';
+    }, 1000);
+
+  // Se houver erros, foca no primeiro campo inválido e interrompe o script
+  if (!emailValido) {
+    return emailInput.focus();
+  }
+  if (!senhaValida) {
+    return senhaInput.focus();
+  }
+
+  // --- MOCK DE AUTENTICAÇÃO BEM SUCEDIDA ---
+  // Aqui, futuramente, você fará um fetch() POST para a sua API enviando o hash da senha e o email.
+  
+  statusLogin.style.color = 'var(--blue)'; // Ou a cor de destaque do tema
+  statusLogin.textContent = 'Autenticando...';
+
+  // Simula um delay de rede (1 segundo) e depois redireciona para a página principal
+  setTimeout(() => {
+    // Redireciona o usuário para o site principal (index_2.html)
+    window.location.href = 'index_2.html';
+  }, 1000);
+});
+</script>
+</body>
+</html>

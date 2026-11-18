@@ -199,8 +199,8 @@ O dashboard ainda não foi construído. Duas opções:
 
 ## Roadmap
 
-- [ ] `v0.2.0`: API com `GET /api/alunos` e `POST /api/contatos`
-- [ ] `v0.3.0`: login do professor e tela de lançamento de notas
+- [x] `v0.2.0`: API com `GET /api/alunos` e `POST /api/contatos`
+- [x] `v0.3.0`: login do professor e tela de lançamento de notas
 - [ ] `v0.4.0`: dashboard (Power BI ou gráficos no site)
 - [ ] `v0.5.0`: auditoria de acessibilidade com leitor de tela e correções
 - [ ] `v1.0.0`: versão estável, com documentação da API

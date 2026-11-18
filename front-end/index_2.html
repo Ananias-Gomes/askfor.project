@@ -48,6 +48,32 @@
   </section>
 
   <section id="alunos" class="sec-pad wrap" aria-labelledby="t-alunos">
+    <!-- Seção exclusiva do Professor (começa oculta com o atributo 'hidden') -->
+  <section id="area-professor" class="sec-pad wrap" aria-labelledby="t-prof" hidden>
+    <h2 id="t-prof">Área do Professor: Lançar Notas</h2>
+    <p class="muted">Preencha os dados abaixo para registrar o desempenho mensal do aluno.</p>
+    
+    <form id="form-registro" class="contato">
+      <div class="campo">
+        <label for="alunoId">ID do Aluno</label>
+        <input type="number" id="alunoId" name="alunoId" required>
+      </div>
+      <div class="campo">
+        <label for="avaliacaoId">ID da Avaliação</label>
+        <input type="number" id="avaliacaoId" name="avaliacaoId" required>
+      </div>
+      <div class="campo">
+        <label for="nota">Nota Obtida</label>
+        <input type="number" step="0.1" id="nota" name="nota" required>
+      </div>
+      <div class="campo">
+        <label for="observacao">Dificuldade / Observação</label>
+        <textarea id="observacao" name="observacao" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn">Salvar Resultado</button>
+      <p id="status-registro" role="status"></p>
+    </form>
+  </section>
     <h2 id="t-alunos">Alunos</h2>
     <p class="muted">Dados fictícios, apenas para demonstração.</p>
     <form id="form-busca" role="search" aria-label="Buscar alunos">
@@ -184,6 +210,11 @@ f.addEventListener('submit',e=>{
   ok.textContent='Mensagem enviada. Responderei em até 2 dias úteis.';
   f.reset();
 });
-</script>
+  const perfil = localStorage.getItem('perfilUsuario');
+  const secaoProfessor = document.getElementedById('area-professor');
+  if (perfil == 'Professor' && secaoProfessor) {
+    secaoProfessor.hidden = false;
+  }
+</script> 
 </body>
 </html>
