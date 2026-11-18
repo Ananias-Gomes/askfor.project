@@ -2,7 +2,7 @@
 
 Sistema web de estudo para um professor de inglês mapear as dificuldades dos alunos e acompanhar a evolução mês a mês, cruzando o desempenho em atividades, conteúdos e provas.
 
-**Versão atual:** `v0.1.0` (protótipo de front-end + modelo de banco de dados)
+**Versão atual:** `v0.3.0` (Implementando página de login. )
 **Data:** 11/11/2026
 **Status:** front-end estático pronto; back-end e dashboard ainda não implementados.
 
