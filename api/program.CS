@@ -1,9 +1,16 @@
+using System.Net.Cache;
 using System.Net.Mail;
+using System.Security.Cryptography.X509Certificates;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddTransiet<SqlConnection>(sp =>
+    new Sqlconnection("Coloque_Sua_String_De_Conexao_Aqui"));
+
+var app = builder.Build();
 // A connection string fica só no servidor (appsettings.json, user-secrets ou variável de ambiente).
 var connStr = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("Defina ConnectionStrings:Default.");
@@ -75,6 +82,47 @@ app.MapPost("/api/contatos", async (ContatoDto c) =>
     var id = await db.ExecuteScalarAsync<int>(sql, new { Nome = nome, Email = email, Mensagem = msg });
     return Results.Created($"/api/contatos/{id}", new { id });
 }).RequireRateLimiting("contato");
+// 1. Rota para lançamento de notas (Substitui o Node.js)
+app.MapPost("/api/resultados", async (ResultadoInput modelo, SqlConnection db) =>
+{
+    // Exemplo de inserção com Dapper
+    const string sql = @"
+        INSERT INTO Resultados (AlunoId, AvaliacaoId, Nota) 
+        VALUES (@AlunoId, @AvaliacaoId, @Nota)";
+        
+    await db.ExecuteAsync(sql, modelo);
+    return Results.Created($"/api/resultados/{modelo.AlunoId}", modelo);
+});
+
+// 2. Rota para validação de Login de fato no Banco de Dados
+app.MapPost("/api/login", async (LoginRequest request, SqlConnection db) =>
+{
+    // Busca o usuário e a senha criptografada (hash)
+    const string sql = "SELECT Id, Perfil, SenhaHash FROM dbo.Usuarios WHERE Email = @Email";
+    var usuario = await db.QueryFirstOrDefaultAsync<UsuarioModel>(sql, new { Email = request.Email });
+
+    if (usuario == null) 
+        return Results.Unauthorized();
+
+    // Aqui você usaria BCrypt.Net para verificar o Hash real:
+    // bool senhaValida = BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash);
+    
+    // Para simplificar o exemplo, vamos assumir que validou:
+    bool senhaValida = true; 
+
+    if (!senhaValida) 
+        return Results.Unauthorized();
+
+    return Results.Ok(new { 
+        Mensagem = "Login realizado com sucesso", 
+        Perfil = usuario.Perfil 
+    });
+});
+
+// Classes de apoio para receber os dados do JSON
+public class ResultadoInput { public int AlunoId { get; set; } public int AvaliacaoId { get; set; } public decimal Nota { get; set; } }
+public class LoginRequest { public string Email { get; set; } public string Senha { get; set; } }
+public class UsuarioModel { public int Id { get; set; } public string Perfil { get; set; } public string SenhaHash { get; set; } }
 
 app.Run();
 

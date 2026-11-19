@@ -46,12 +46,27 @@
       <li><article class="info"><h3>Reforce o que falta</h3><p>Alunos abaixo de 60% em uma habilidade aparecem como prioridade.</p></article></li>
     </ul>
   </section>
+<!-- Seção de Alunos -->
+<section id="alunos">
+    <h2>Desempenho dos Alunos</h2>
+    <div id="lista-alunos">
+        <!-- O JavaScript vai injetar os alunos aqui -->
+    </div>
+</section>
 
-  <section id="alunos" class="sec-pad wrap" aria-labelledby="t-alunos">
-    <!-- Seção exclusiva do Professor (começa oculta com o atributo 'hidden') -->
-  <section id="area-professor" class="sec-pad wrap" aria-labelledby="t-prof" hidden>
-    <h2 id="t-prof">Área do Professor: Lançar Notas</h2>
-    <p class="muted">Preencha os dados abaixo para registrar o desempenho mensal do aluno.</p>
+<!-- Seção do Professor (Agora do lado de fora, independente) -->
+<section id="area-professor" hidden>
+    <h2>Lançar Notas</h2>
+    <form id="form-registro">
+        <label for="aluno-id">ID do Aluno:</label>
+        <input type="number" id="aluno-id" required>
+        
+        <label for="nota">Nota:</label>
+        <input type="number" id="nota" step="0.1" required>
+        
+        <button type="submit">Salvar Nota</button>
+    </form>
+</section>
     
     <form id="form-registro" class="contato">
       <div class="campo">
@@ -73,6 +88,7 @@
       <button type="submit" class="btn">Salvar Resultado</button>
       <p id="status-registro" role="status"></p>
     </form>
+  
   </section>
     <h2 id="t-alunos">Alunos</h2>
     <p class="muted">Dados fictícios, apenas para demonstração.</p>
@@ -141,42 +157,66 @@ btnTema.addEventListener('click',()=>{
 
 /* ---------- Alunos: busca + filtro ---------- */
 // Troque este array por: const alunos = await (await fetch('/api/alunos')).json();
-const alunos=[
- {n:'Ana Beatriz Lima',nivel:'B1',dif:'Grammar',ant:58,atu:67},
- {n:'Carlos Eduardo Souza',nivel:'A2',dif:'Listening',ant:61,atu:59},
- {n:'Marina Costa',nivel:'B2',dif:'Writing',ant:72,atu:78},
- {n:'Rafael Oliveira',nivel:'A2',dif:'Vocabulary',ant:49,atu:57},
- {n:'Júlia Fernandes',nivel:'B1',dif:'Speaking',ant:65,atu:64},
- {n:'Pedro Henrique Alves',nivel:'B2',dif:'Reading',ant:80,atu:84}
-];
-const difs=['Todas','Grammar','Vocabulary','Listening','Speaking','Reading','Writing'];
-let dif='Todas',q='';
-const lista=document.getElementById('lista'),status=document.getElementById('status'),chips=document.getElementById('chips');
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Verifica se é professor para exibir a área de notas
+    const perfil = localStorage.getItem('perfilUsuario');
+    const secaoProfessor = document.getElementById('area-professor');
+    
+    if (perfil === 'Professor' && secaoProfessor) {
+        secaoProfessor.hidden = false;
+    }
 
-chips.innerHTML=difs.map(d=>`<button type="button" class="chip" aria-pressed="${d===dif}">${d}</button>`).join('');
-chips.addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b) return;
-  dif=b.textContent;
-  chips.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
-  render();
+    // 2. Busca os alunos do back-end em C#
+    try {
+        const resposta = await fetch('/api/alunos');
+        if (!resposta.ok) throw new Error('Erro ao buscar dados');
+        
+        const alunos = await resposta.json();
+        renderizarAlunos(alunos);
+    } catch (erro) {
+        console.error(erro);
+        document.getElementById('lista-alunos').innerHTML = '<p>Erro ao carregar dados do servidor.</p>';
+    }
+
+    // 3. Envia os dados do formulário de notas para o C#
+    const formRegistro = document.getElementById('form-registro');
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const dados = {
+                AlunoId: parseInt(document.getElementById('aluno-id').value),
+                AvaliacaoId: 1, // Exemplo
+                Nota: parseFloat(document.getElementById('nota').value)
+            };
+
+            const resposta = await fetch('/api/resultados', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            if (resposta.ok) {
+                alert('Nota salva com sucesso!');
+                formRegistro.reset();
+            } else {
+                alert('Erro ao salvar nota.');
+            }
+        });
+    }
 });
-document.getElementById('busca').addEventListener('input',e=>{q=norm(e.target.value.trim());render()});
-document.getElementById('form-busca').addEventListener('submit',e=>e.preventDefault());
 
-function render(){
-  const r=alunos.filter(a=>(dif==='Todas'||a.dif===dif)&&norm(a.n).includes(q));
-  lista.innerHTML=r.map(a=>{
-    const d=a.atu-a.ant, t=d>0?`Subiu ${d} pontos`:d<0?`Caiu ${-d} pontos`:'Sem variação';
-    return `<li><article class="card"><h3>${esc(a.n)}</h3>
-      <p>Nível ${esc(a.nivel)}. Maior dificuldade: ${esc(a.dif)}.</p>
-      <progress max="100" value="${a.atu}" aria-label="Média de novembro de ${esc(a.n)}">${a.atu}%</progress>
-      <p>Outubro ${a.ant}%. Novembro ${a.atu}%. <strong>${t}.</strong></p></article></li>`;
-  }).join('');
-  status.textContent=r.length?`${r.length} aluno(s) encontrado(s).`:'Nenhum aluno encontrado. Limpe a busca ou escolha outra dificuldade.';
+// Função atualizada com as chaves corretas do C# (nome, mediaAtual, etc)
+function renderizarAlunos(alunos) {
+    const container = document.getElementById('lista-alunos');
+    container.innerHTML = alunos.map(aluno => `
+        <div class="card-aluno">
+            <h3>${aluno.nome}</h3>
+            <p><strong>Nível:</strong> ${aluno.nivel}</p>
+            <p><strong>Dificuldade:</strong> ${aluno.dificuldade}</p>
+            <p>Média Anterior: ${aluno.mediaAnterior} | Média Atual: <strong>${aluno.mediaAtual}</strong></p>
+        </div>
+    `).join('');
 }
-render();
 
 /* ---------- Carrossel (sem rotação automática, por acessibilidade) ---------- */
 const slides=[...document.querySelectorAll('.slide')],cont=document.getElementById('cont');let i=0;

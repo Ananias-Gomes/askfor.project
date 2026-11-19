@@ -161,71 +161,16 @@ formLogin.addEventListener('submit', (e) => {
   senhaInput.setAttribute('aria-invalid', !senhaValida);
   erroSenha.hidden = senhaValida;
 
-  document.getElementById('form-registro').addEventListener('submit', async (e) => {
-  e.preventDefault(); // Evita que a página recarregue
-  const status = document.getElementById('status-registro');
-  status.textContent = 'Salvando no banco de dados...';
-  status.style.color = 'inherit';
+  if(!emailValido) return emaiInput.focus();
+  if(!senhaValida) return senhaInput.focus();
 
-  // Empacota os dados do formulário
-  const dados = {
-    alunoId: document.getElementById('alunoId').value,
-    avaliacaoId: document.getElementById('avaliacaoId').value,
-    nota: document.getElementById('nota').value,
-    observacao: document.getElementById('observacao').value
-  };
-
-  try {
-    // Envia os dados via POST para a API
-    const resposta = await fetch('http://localhost:3000/api/resultados', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dados)
-    });
-
-    if (resposta.ok) {
-      status.textContent = 'Nota registrada com sucesso!';
-      status.style.color = 'green';
-      e.target.reset(); // Limpa os campos do formulário
-      
-      // Opcional: Chamar a função que recarrega o dashboard para atualizar a tela na hora
-      // carregarDadosDoBanco(); 
-    } else {
-      status.textContent = 'Erro ao salvar os dados.';
-      status.style.color = 'var(--erro)';
-    }
-  } catch (erro) {
-    status.textContent = 'Falha de conexão com a API.';
-    status.style.color = 'var(--erro)';
-  }
-});
-  const papelEscolhido = document.querySelector('input[name="papel":checked]').value;
-
-  statusLogin.style.color = 'var(--blue)';
-  statusLogin.textContent = 'Autentincando...';
-    setTimeout(() => {
-      localStorage.setItem('perfilUsuario', papelEscolhido);
-      window.location.href = 'index_2.html';
-    }, 1000);
-
-  // Se houver erros, foca no primeiro campo inválido e interrompe o script
-  if (!emailValido) {
-    return emailInput.focus();
-  }
-  if (!senhaValida) {
-    return senhaInput.focus();
-  }
-
-  // --- MOCK DE AUTENTICAÇÃO BEM SUCEDIDA ---
-  // Aqui, futuramente, você fará um fetch() POST para a sua API enviando o hash da senha e o email.
-  
-  statusLogin.style.color = 'var(--blue)'; // Ou a cor de destaque do tema
+const papelEscolhido = document.querySelector('input[name = "papel"]: checked').value;
+  statusLogin.style.color = 'var(--accent)';
   statusLogin.textContent = 'Autenticando...';
 
-  // Simula um delay de rede (1 segundo) e depois redireciona para a página principal
-  setTimeout(() => {
-    // Redireciona o usuário para o site principal (index_2.html)
-    window.location.href = 'index_2.html';
+setTimeout(()=> {
+  localStorage.setItem('perfilUsuario', papelEscolhido);
+  window.location.href = 'index.html';
   }, 1000);
 });
 </script>
