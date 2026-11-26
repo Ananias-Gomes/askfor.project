@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Entrar - Mapa de Progresso de Inglês</title>
+<script src="tema.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="login.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+
+<header class="topo azul">
+  <div class="wrap">
+    <a class="marca" href="index.html">Mapa de Progresso de Inglês</a>
+    <div class="tools">
+      <label for="dalt">Visão de cores</label>
+      <select id="dalt">
+        <option value="padrao">Padrão</option>
+        <option value="protanopia">Protanopia</option>
+        <option value="deuteranopia">Deuteranopia</option>
+        <option value="tritanopia">Tritanopia</option>
+      </select>
+      <button type="button" id="tema" class="btn" aria-pressed="false">Modo escuro</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="login wrap">
+  <article class="card">
+    <h1 style="font-size:1.75rem">Entrar na plataforma</h1>
+    <form id="form-login" novalidate>
+      <fieldset class="papel">
+        <legend class="sr">Seu perfil</legend>
+        <label><input type="radio" name="papel" value="Professor" checked><span>Sou professor</span></label>
+        <label><input type="radio" name="papel" value="Aluno"><span>Sou aluno</span></label>
+      </fieldset>
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" autocomplete="username" required>
+        <p class="erro" id="erro-email" hidden>Erro: informe um e-mail válido, como nome@exemplo.com.</p>
+      </div>
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+        <p class="erro" id="erro-senha" hidden>Erro: informe a senha.</p>
+      </div>
+
+      <button type="submit" id="entrar" class="btn" style="width:100%">Entrar</button>
+      <p id="status-login" role="alert" style="margin:1rem 0 0;font-weight:700"></p>
+    </form>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap"><p class="copy">© 2026 Mapa de Progresso de Inglês. Dados tratados conforme a LGPD.</p></div>
+</footer>
+</body>
+</html>

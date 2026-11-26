@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Mapa de Progresso de Inglês</title>
+<script src="tema.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+
+<header class="topo azul">
+  <div class="wrap">
+    <a class="marca" href="#main">Mapa de Progresso de Inglês</a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#como">Como funciona</a></li>
+        <li data-papel="logado" hidden><a href="#alunos">Alunos</a></li>
+        <li data-papel="logado" hidden><a href="#dashboard">Dashboard</a></li>
+        <li data-papel="Professor" hidden><a href="#lancar">Lançar notas</a></li>
+        <li><a href="#destaques">Destaques</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+    <div class="tools">
+      <label for="dalt">Visão de cores</label>
+      <select id="dalt">
+        <option value="padrao">Padrão</option>
+        <option value="protanopia">Protanopia</option>
+        <option value="deuteranopia">Deuteranopia</option>
+        <option value="tritanopia">Tritanopia</option>
+      </select>
+      <button type="button" id="tema" class="btn" aria-pressed="false">Modo escuro</button>
+      <span id="ola" role="status"></span>
+      <a class="btn" href="login.html" data-papel="visitante" hidden>Entrar</a>
+      <button type="button" id="sair" class="btn" data-papel="logado" hidden>Sair</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero-bg">
+    <section class="hero wrap" aria-labelledby="t-hero">
+      <h1 id="t-hero">Veja onde cada aluno trava e quanto avançou de um mês para o outro</h1>
+      <p>Atividades, conteúdos e provas ficam no mesmo lugar. Cada média é comparada com a meta do nível, de A1 a C2, e com o mês anterior.</p>
+      <div class="acoes">
+        <a class="btn" href="login.html" data-papel="visitante" hidden>Entrar na plataforma</a>
+        <a class="btn" href="#alunos" data-papel="logado" hidden>Ver alunos</a>
+        <a class="btn sec" href="#contato">Falar com o professor</a>
+      </div>
+    </section>
+  </div>
+
+  <section id="como" class="sec-pad wrap" aria-labelledby="t-como">
+    <h2 id="t-como">Como funciona</h2>
+    <ul class="grade">
+      <li><article class="info"><h3>Registre os resultados</h3><p>Lance as notas de atividades e provas, sempre ligadas a um conteúdo, um nível e uma habilidade.</p></article></li>
+      <li><article class="info"><h3>Compare com a meta do nível</h3><p>O sistema calcula a média ponderada por habilidade e mostra a variação em pontos.</p></article></li>
+      <li><article class="info"><h3>Reforce o que falta</h3><p>Habilidades abaixo da meta do nível aparecem como prioridade nos cartões e no gráfico.</p></article></li>
+    </ul>
+  </section>
+
+  <section id="alunos" class="sec-pad wrap" aria-labelledby="t-alunos" data-papel="logado" hidden>
+    <h2 id="t-alunos">Alunos</h2>
+    <p class="muted">Dados fictícios de demonstração. Acesso restrito, conforme a LGPD.</p>
+    <form id="form-busca" role="search" aria-label="Buscar alunos">
+      <div class="campo">
+        <label for="busca">Buscar aluno pelo nome</label>
+        <input type="search" id="busca" autocomplete="off">
+      </div>
+      <div id="chips" class="filtros" role="group" aria-label="Filtrar pela maior dificuldade"></div>
+    </form>
+    <p id="status" role="status"></p>
+    <ul id="lista" class="grade"></ul>
+  </section>
+
+  <section id="dashboard" class="sec-pad wrap" aria-labelledby="t-dash" data-papel="logado" hidden>
+    <h2 id="t-dash">Dashboard de crescimento</h2>
+    <p class="muted">A linha tracejada mostra a meta média do nível. Cada habilidade tem cor, traço e marcador próprios.</p>
+    <form id="form-dash" class="dash-filtros" aria-label="Filtros do dashboard">
+      <div class="campo" data-papel="Professor" hidden><label for="f-aluno">Aluno</label><select id="f-aluno"><option value="">Todos os alunos</option></select></div>
+      <div class="campo"><label for="f-nivel">Nível</label><select id="f-nivel"></select></div>
+      <div class="campo"><label for="f-comp">Habilidade</label><select id="f-comp"></select></div>
+      <div class="campo"><label for="f-tipo">Tipo</label><select id="f-tipo"><option value="">Atividades e provas</option><option>Atividade</option><option>Prova</option></select></div>
+      <div class="campo"><label for="f-de">De</label><input type="month" id="f-de" placeholder="aaaa-mm"></div>
+      <div class="campo"><label for="f-ate">Até</label><input type="month" id="f-ate" placeholder="aaaa-mm"></div>
+    </form>
+    <div class="painel"><div class="graf"><canvas id="grafico" role="img" aria-label="Gráfico de evolução. Os mesmos dados estão na tabela abaixo.">Gráfico indisponível. Use a tabela abaixo.</canvas></div></div>
+    <p id="resumo" role="status"></p>
+    <div class="tabela"><table id="tabela"></table></div>
+  </section>
+
+  <section id="lancar" class="sec-pad wrap" aria-labelledby="t-prof" data-papel="Professor" hidden>
+    <h2 id="t-prof">Lançar notas</h2>
+    <p class="muted">Se já existir nota para o aluno nessa avaliação, ela será atualizada.</p>
+    <form id="form-registro" class="contato">
+      <div class="campo"><label for="alunoSel">Aluno</label><select id="alunoSel" name="aluno" required></select></div>
+      <div class="campo"><label for="avalSel">Avaliação</label><select id="avalSel" name="aval" required></select></div>
+      <div class="campo"><label for="nota">Nota</label><input type="number" id="nota" name="nota" min="0" step="0.1" required></div>
+      <div class="campo"><label for="observacao">Dificuldade observada (opcional)</label><textarea id="observacao" name="observacao" rows="3" maxlength="300"></textarea></div>
+      <button type="submit" class="btn">Salvar nota</button>
+      <p id="status-registro" role="status"></p>
+    </form>
+  </section>
+
+  <section id="destaques" class="azul sec-pad" aria-labelledby="t-dest">
+    <div class="wrap" role="region" aria-roledescription="carrossel" aria-label="Destaques do mês" id="carrossel">
+      <h2 id="t-dest">Destaques do mês</h2>
+      <div aria-live="polite">
+        <!-- Para imagens: <img src="..." alt="descrição"> dentro do slide -->
+        <div class="slide" role="group" aria-roledescription="destaque"><h3>Listening é a maior dificuldade do nível A2</h3><p>Os dois alunos A2 ficaram perto ou abaixo da meta nas provas de compreensão oral.</p></div>
+        <div class="slide" role="group" aria-roledescription="destaque" hidden><h3>Writing evoluiu no nível B2</h3><p>A média da prova de novembro subiu em relação a outubro.</p></div>
+        <div class="slide" role="group" aria-roledescription="destaque" hidden><h3>Atividades curtas ajudam no vocabulário</h3><p>Quem fez a revisão semanal teve a maior variação do mês.</p></div>
+      </div>
+      <div class="ctrl">
+        <button type="button" class="btn" id="ant">Destaque anterior</button>
+        <button type="button" class="btn" id="prox">Próximo destaque</button>
+        <span id="cont"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="sec-pad wrap" aria-labelledby="t-contato">
+    <h2 id="t-contato">Fale com o professor</h2>
+    <form id="contato-form" class="contato" novalidate>
+      <div class="campo"><label for="nome">Nome</label><input id="nome" name="nome" autocomplete="name" required><p class="erro" id="erro-nome" hidden>Erro: informe seu nome com pelo menos 3 letras.</p></div>
+      <div class="campo"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required><p class="erro" id="erro-email" hidden>Erro: informe um e-mail válido, como nome@exemplo.com.</p></div>
+      <div class="campo"><label for="mensagem">Mensagem</label><textarea id="mensagem" name="mensagem" rows="5" required></textarea><p class="erro" id="erro-mensagem" hidden>Erro: escreva uma mensagem com pelo menos 10 caracteres.</p></div>
+      <button type="submit" class="btn">Enviar mensagem</button>
+      <p id="ok" role="status"></p>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grade">
+      <section aria-labelledby="f-sobre"><h2 id="f-sobre">Sobre o projeto</h2><p>Projeto de estudo para acompanhar o progresso mensal de alunos de inglês.</p></section>
+      <nav aria-labelledby="f-nav"><h2 id="f-nav">Navegação</h2><ul><li><a href="#como">Como funciona</a></li><li><a href="#destaques">Destaques</a></li><li><a href="#contato">Contato</a></li></ul></nav>
+      <section aria-labelledby="f-contato"><h2 id="f-contato">Contato</h2><address>contato@exemplo.com.br<br>Seg. a sex., 8h às 18h</address></section>
+      <section aria-labelledby="f-acess"><h2 id="f-acess">Acessibilidade</h2><p>Feito seguindo a WCAG 2.2, com navegação por teclado, leitores de tela e modos de cor para daltonismo.</p></section>
+    </div>
+    <p class="copy">© 2026 Mapa de Progresso de Inglês. Os dados dos alunos são tratados conforme a LGPD: acesso restrito a professor e ao próprio aluno.</p>
+  </div>
+</footer>
+</body>
+</html>
